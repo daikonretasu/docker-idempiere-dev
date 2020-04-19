@@ -46,6 +46,7 @@ RUN alternatives --install /usr/bin/jar jar /usr/local/jdk-11/bin/jar 2
 RUN alternatives --install /usr/bin/javac javac /usr/local/jdk-11/bin/javac 2
 RUN alternatives --set jar /usr/local/jdk-11/bin/jar
 RUN alternatives --set javac /usr/local/jdk-11/bin/javac
+RUN echo 3 | alternatives --config java
 
 #maven
 RUN wget -q  -O  /tmp/apache-maven-3.6.3-bin.tar.gz "https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz"
@@ -54,7 +55,38 @@ RUN tar zxf /tmp/apache-maven-3.6.3-bin.tar.gz -C /usr/local
 #git
 RUN yum -y install git
 
+
 #環境変数
-RUN echo "JAVA_HOME=/usr/bin/java" >> /root/.bash_profile
-RUN echo "MAVEN_HOME=/usr/local/apache-maven-3.6.3" >> /root/.bash_profile
-RUN echo "PATH=$PATH:$JAVA_HOME/bin/:$MAVEN_HOME/bin/">> /root/.bash_profile
+ENV JAVA_HOME /usr/local/jdk-11
+ENV MAVEN_HOME /usr/local/apache-maven-3.6.3
+ENV PATH $PATH:$JAVA_HOME/bin/:$MAVEN_HOME/bin/
+
+#ワークスペースの作成からソース取得
+#iDempiere
+RUN mkdir /home/idempiere-workspace
+RUN git clone https://github.com/JPiere/idempiere.git /home/idempiere-workspace/idempiere
+RUN cd /home/idempiere-workspace/idempiere && git checkout -b release-7.1 origin/release-7.1
+RUN cd /home/idempiere-workspace/idempiere/ && mvn validate
+RUN cd /home/idempiere-workspace/idempiere/ && mvn verify
+#Jpiere ピポッドと翻訳は除外
+RUN mkdir /home/idempiere-workspace/jpiere
+RUN git clone https://github.com/JPiere/JPCS.git /home/idempiere-workspace/jpiere/JPCS
+RUN cd /home/idempiere-workspace/jpiere/JPCS && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/JPBP.git /home/idempiere-workspace/jpiere/JPBP
+RUN cd /home/idempiere-workspace/jpiere/JPBP && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/JPFS.git /home/idempiere-workspace/jpiere/JPFS
+RUN cd /home/idempiere-workspace/jpiere/JPFS && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/JPMS.git /home/idempiere-workspace/jpiere/JPMS
+RUN cd /home/idempiere-workspace/jpiere/JPMS && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/jpiere.plugin.webui.formwindow.git /home/idempiere-workspace/jpiere/jpiere.plugin.webui.formwindow
+RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.webui.formwindow && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/jpiere.plugin.webui.wysiwygeditor.git /home/idempiere-workspace/jpiere/jpiere.plugin.webui.wysiwygeditor
+RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.webui.wysiwygeditor && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/jpiere.plugin.webui.simpleinputwindow.git /home/idempiere-workspace/jpiere/jpiere.plugin.webui.simpleinputwindow
+RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.webui.simpleinputwindow && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/jpiere.plugin.webui.matrixwindow.git /home/idempiere-workspace/jpiere/jpiere.plugin.webui.matrixwindow
+RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.webui.matrixwindow && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/jpiere.plugin.webui.dashboardgadget.git /home/idempiere-workspace/jpiere/jpiere.plugin.webui.dashboardgadget
+RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.webui.dashboardgadget && git checkout -b release-7.1 origin/release-7.1
+RUN git clone https://github.com/JPiere/jpiere.plugin.delete.git /home/idempiere-workspace/jpiere/jpiere.plugin.delete
+RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.delete && git checkout -b release-7.1 origin/release-7.1

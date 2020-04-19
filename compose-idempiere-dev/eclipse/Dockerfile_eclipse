@@ -1,5 +1,5 @@
 FROM centos:7
-LABEL maintainer "daikonretasu<daikonretas1027@gmail.com>"
+LABEL maintainer "daikonretasu<daikonretasu1027@gmail.com>"
 
 # CentOS ProjectのGPG公開鍵をインストールする
 RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7

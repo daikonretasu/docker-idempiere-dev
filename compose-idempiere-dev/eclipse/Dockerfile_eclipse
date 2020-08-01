@@ -30,6 +30,9 @@ RUN yum -y install man
 RUN yum -y install man-pages.noarch
 RUN yum -y install man-pages-ja.noarch
 
+# xeyesのインストール
+RUN yum -y install xeyes
+
 #Eclipseダウンロード
 RUN wget -q -O /tmp/eclipse-inst-linux64.tar.gz "http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/2020-03/R/eclipse-jee-2020-03-R-incubation-linux-gtk-x86_64.tar.gz"
 RUN tar zxvf /tmp/eclipse-* -C /opt/

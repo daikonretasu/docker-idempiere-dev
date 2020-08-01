@@ -1,5 +1,5 @@
 FROM centos:7
-LABEL maintainer "daikonretasu<daikonretasu1027@gmail.com>"
+LABEL maintainer "daikonretasu<daikonretas1027@gmail.com>"
 
 # CentOS ProjectのGPG公開鍵をインストールする
 RUN rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
@@ -30,7 +30,7 @@ RUN yum -y install man
 RUN yum -y install man-pages.noarch
 RUN yum -y install man-pages-ja.noarch
 
-# xeyesのインストール
+# xeyesをインストール
 RUN yum -y install xeyes
 
 #Eclipseダウンロード
@@ -69,8 +69,7 @@ ENV PATH $PATH:$JAVA_HOME/bin/:$MAVEN_HOME/bin/
 RUN mkdir /home/idempiere-workspace
 RUN git clone https://github.com/JPiere/idempiere.git /home/idempiere-workspace/idempiere
 RUN cd /home/idempiere-workspace/idempiere && git checkout -b release-7.1 origin/release-7.1
-RUN cd /home/idempiere-workspace/idempiere/ && mvn validate
-RUN cd /home/idempiere-workspace/idempiere/ && mvn verify
+
 #Jpiere ピポッドと翻訳は除外
 RUN mkdir /home/idempiere-workspace/jpiere
 RUN git clone https://github.com/JPiere/JPCS.git /home/idempiere-workspace/jpiere/JPCS
@@ -93,3 +92,23 @@ RUN git clone https://github.com/JPiere/jpiere.plugin.webui.dashboardgadget.git 
 RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.webui.dashboardgadget && git checkout -b release-7.1 origin/release-7.1
 RUN git clone https://github.com/JPiere/jpiere.plugin.delete.git /home/idempiere-workspace/jpiere/jpiere.plugin.delete
 RUN cd /home/idempiere-workspace/jpiere/jpiere.plugin.delete && git checkout -b release-7.1 origin/release-7.1
+
+#POMファイルの配置
+COPY pom/idempiere/pom.xml /home/idempiere-workspace/idempiere/pom.xml 
+COPY pom/jpiere/JPBP/jpiere.base.plugin/pom.xml /home/idempiere-workspace/jpiere/JPBP/jpiere.base.plugin/pom.xml 
+COPY pom/jpiere/JPFS/jpiere.fragment.org.adempiere.base/pom.xml /home/idempiere-workspace/jpiere/JPFS/jpiere.fragment.org.adempiere.base/pom.xml 
+COPY pom/jpiere/JPFS/jpiere.fragment.org.adempiere.report.jasper.library/pom.xml /home/idempiere-workspace/jpiere/JPFS/jpiere.fragment.org.adempiere.report.jasper.library/pom.xml
+COPY pom/jpiere/JPFS/jpiere.fragment.org.adempiere.server/pom.xml /home/idempiere-workspace/jpiere/JPFS/jpiere.fragment.org.adempiere.server/pom.xml 
+COPY pom/jpiere/JPFS/jpiere.fragment.org.adempiere.ui.zk/pom.xml /home/idempiere-workspace/jpiere/JPFS/jpiere.fragment.org.adempiere.ui.zk/pom.xml
+COPY pom/jpiere/JPMS/jpiere.modification.org.adempiere.base/pom.xml /home/idempiere-workspace/jpiere/JPMS/jpiere.modification.org.adempiere.base/pom.xml
+COPY pom/jpiere/JPMS/jpiere.modification.org.adempiere.ui.zk/pom.xml /home/idempiere-workspace/jpiere/JPMS/jpiere.modification.org.adempiere.ui.zk/pom.xml 
+COPY pom/jpiere/jpiere.plugin.delete/pom.xml /home/idempiere-workspace/jpiere/jpiere.plugin.delete/pom.xml 
+COPY pom/jpiere/jpiere.plugin.webui.dashboardgadget/pom.xml /home/idempiere-workspace/jpiere/jpiere.plugin.webui.dashboardgadget/pom.xml
+COPY pom/jpiere/jpiere.plugin.webui.formwindow/pom.xml /home/idempiere-workspace/jpiere/jpiere.plugin.webui.formwindow/pom.xml
+COPY pom/jpiere/jpiere.plugin.webui.matrixwindow/pom.xml /home/idempiere-workspace/jpiere/jpiere.plugin.webui.matrixwindow/pom.xml  
+COPY pom/jpiere/jpiere.plugin.webui.simpleinputwindow/pom.xml /home/idempiere-workspace/jpiere/jpiere.plugin.webui.simpleinputwindow/pom.xml
+COPY pom/jpiere/jpiere.plugin.webui.wysiwygeditor/pom.xml /home/idempiere-workspace/jpiere/jpiere.plugin.webui.wysiwygeditor/pom.xml 
+
+
+RUN cd /home/idempiere-workspace/idempiere/ && mvn validate
+RUN cd /home/idempiere-workspace/idempiere/ && mvn verify
